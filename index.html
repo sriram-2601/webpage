@@ -26,6 +26,37 @@
         .border-purple-600 {
             border-color: #7c3aed;
         }
+
+        /* Styles for slide-in from right animation */
+        @keyframes slideInFromRightKeyframes {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .start-slide-in-animation {
+            animation: slideInFromRightKeyframes 0.8s ease-out forwards;
+        }
+
+        /* Styles for slide-in from left animation */
+        @keyframes slideInFromLeftKeyframes {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .start-slide-in-left-animation {
+            animation: slideInFromLeftKeyframes 0.8s ease-out forwards;
+        }
     </style>
 </head>
 <body class="bg-white">
@@ -93,7 +124,7 @@
                     </a>
                 </div>
                 <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-                    <img src="./hero.png" alt="mockup">
+                    <img src="./images/hero.png" alt="mockup">
                 </div>
             </div>
         </section>
@@ -132,7 +163,7 @@
         </section>
 
         <!-- Feature 1 -->
-        <section class="bg-white">
+        <section id="feature-1" class="bg-white">
             <div class="gap-8 items-center py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-16 lg:px-6">
                 <div class="mt-4 md:mt-0">
                     <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900">Work with tools you already use</h2>
@@ -161,7 +192,7 @@
         </section>
 
         <!-- Feature 2 -->
-        <section class="bg-white">
+        <section id="feature-2" class="bg-white">
             <div class="gap-8 items-center py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-16 lg:px-6">
                  <img class="w-full hidden md:block rounded-lg" src="./feature-2.png" alt="feature image">
                 <div class="mt-4 md:mt-0">
@@ -525,6 +556,58 @@
             });
         });
 
+        // --- JavaScript for Feature 1 slide-in animation ---
+        const feature1Section = document.getElementById('feature-1');
+
+        if (feature1Section) {
+            // Initially hide the section with JS so it can be animated in.
+            // If JS is disabled, the section remains visible as per its default HTML/CSS.
+            feature1Section.style.opacity = '0';
+
+            const featureObserverOptions = {
+                root: null, // observing intersections relative to the viewport
+                rootMargin: '0px',
+                threshold: 0.1 // Trigger when 10% of the section is visible
+            };
+
+            const featureObserverCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('start-slide-in-animation');
+                        observer.unobserve(entry.target); // Animate only once
+                    }
+                });
+            };
+
+            const intersectionObserverFeature1 = new IntersectionObserver(featureObserverCallback, featureObserverOptions);
+            intersectionObserverFeature1.observe(feature1Section);
+        }
+
+        // --- JavaScript for Feature 2 slide-in animation (from left) ---
+        const feature2Section = document.getElementById('feature-2');
+
+        if (feature2Section) {
+            // Initially hide the section with JS
+            feature2Section.style.opacity = '0';
+
+            const feature2ObserverOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1 // Trigger when 10% of the section is visible
+            };
+
+            const feature2ObserverCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('start-slide-in-left-animation');
+                        observer.unobserve(entry.target); // Animate only once
+                    }
+                });
+            };
+
+            const intersectionObserverFeature2 = new IntersectionObserver(feature2ObserverCallback, feature2ObserverOptions);
+            intersectionObserverFeature2.observe(feature2Section);
+        }
     </script>
 
 </body>
